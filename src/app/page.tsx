@@ -62,7 +62,10 @@ export default function Home() {
   };
 
   return (
-    <div ref={scope}>
+    <div
+      className="h-screen w-full flex items-center justify-center"
+      ref={scope}
+    >
       <button
         onClick={onButtonClick}
         className="rounded-full text-2xl border-2 border-blue-600 px-6 py-2 text-blue-600 hover:bg-blue-100 transition-colors relative"
