@@ -2,17 +2,24 @@
 
 import { animate, stagger, useAnimate } from "framer-motion";
 
+// Helper function to generate random numbers within a range
 const randomNumberBetween = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
+// Define the type for our animation sequence
 type AnimationSequence = Parameters<typeof animate>[0];
 
 export default function Home() {
+  // Set up animation hook from Framer Motion
   const [scope, animate] = useAnimate();
 
+  // Function that runs when the button is clicked
   const onButtonClick = () => {
+    // Create an array of 20 undefined items (will be used for sparkles)
     const sparkles = Array.from({ length: 20 });
+
+    // Define animation for sparkles to appear and spread out
     const sparklesAnimation: AnimationSequence = sparkles.map((_, index) => [
       `.sparkle-${index}`,
       {
@@ -27,6 +34,7 @@ export default function Home() {
       },
     ]);
 
+    // Define animation for sparkles to fade out
     const sparklesFadeOut: AnimationSequence = sparkles.map((_, index) => [
       `.sparkle-${index}`,
       {
@@ -39,6 +47,7 @@ export default function Home() {
       },
     ]);
 
+    // Define animation to reset sparkles to original position
     const sparklesReset: AnimationSequence = sparkles.map((_, index) => [
       `sparkle-${index}`,
       {
@@ -50,28 +59,39 @@ export default function Home() {
       },
     ]);
 
+    // Run the full animation sequence
     animate([
       ...sparklesReset,
+      // Animate letters upwards
       [".letter", { y: -32 }, { duration: 0.2, delay: stagger(0.05) }],
+      // Scale button down
       ["button", { scale: 0.8 }, { duration: 0.1, at: "<" }],
+      // Scale button back up
       ["button", { scale: 1 }, { duration: 0.1 }],
       ...sparklesAnimation,
+      // Reset letters to original position
       [".letter", { y: 0 }, { duration: 0.000001 }],
       ...sparklesFadeOut,
     ]);
   };
 
+  // Render the component
   return (
+    // Container div, centered on screen
     <div
       className="h-screen w-full flex items-center justify-center"
       ref={scope}
     >
+      {/* Button element */}
       <button
         onClick={onButtonClick}
         className="rounded-full text-2xl border-2 border-blue-600 px-6 py-2 text-blue-600 hover:bg-blue-100 transition-colors relative"
       >
+        {/* Hidden text for screen readers */}
         <span className="sr-only">Motion</span>
+        {/* Visible text */}
         <span className="block h-8 overflow-hidden" aria-hidden>
+          {/* Map each letter to a span for individual animation */}
           {["M", "o", "t", "i", "o", "n"].map((letter, index) => (
             <span
               data-letter={letter}
@@ -83,10 +103,12 @@ export default function Home() {
             </span>
           ))}
         </span>
+        {/* Container for sparkle elements */}
         <span
           aria-hidden
           className="absolute inset-0 block pointer-events-none -z-10"
         >
+          {/* Create 20 sparkle SVG elements */}
           {Array.from({ length: 20 }).map((_, index) => (
             <svg
               className={`absolute opacity-0 left-1/2 top-1/2 sparkle-${index}`}
